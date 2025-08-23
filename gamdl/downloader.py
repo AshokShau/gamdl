@@ -428,21 +428,7 @@ class Downloader:
         return "." + file_format.value
 
     def get_final_path(self, tags: dict, file_extension: str) -> Path:
-        if tags.get("album"):
-            template_folder = (
-                self.template_folder_compilation.split("/")
-                if tags.get("compilation")
-                else self.template_folder_album.split("/")
-            )
-            template_file = (
-                self.template_file_multi_disc.split("/")
-                if tags["disc_total"] > 1
-                else self.template_file_single_disc.split("/")
-            )
-        else:
-            template_folder = self.template_folder_no_album.split("/")
-            template_file = self.template_file_no_album.split("/")
-        template_final = template_folder + template_file
+        template_final = ""
         return Path(
             self.output_path,
             *[
