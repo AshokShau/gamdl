@@ -544,9 +544,12 @@ def main(
                     lyrics = downloader_song.get_lyrics(media_metadata)
                     logger.debug("Getting webplayback")
                     webplayback = apple_music_api.get_webplayback(media_id)
+                    lyrics_text = None
+                    if lyrics:
+                        lyrics_text = lyrics.synced if lyrics.synced else lyrics.unsynced
                     tags = downloader_song.get_tags(
                         webplayback,
-                        lyrics.unsynced if lyrics else None,
+                        lyrics_text,
                     )
                     if playlist_track:
                         tags = {
@@ -637,17 +640,17 @@ def main(
                                 decrypted_path,
                                 remuxed_path,
                             )
-                    if no_synced_lyrics or not lyrics or not lyrics.synced:
-                        pass
-                    elif lyrics_synced_path.exists() and not overwrite:
-                        logger.debug(
-                            f'Synced lyrics already exists at "{lyrics_synced_path}", skipping'
-                        )
-                    else:
-                        logger.debug(f'Saving synced lyrics to "{lyrics_synced_path}"')
-                        downloader_song.save_lyrics_synced(
-                            lyrics_synced_path, lyrics.synced
-                        )
+
+                    if not no_synced_lyrics and lyrics and lyrics.synced:
+                        if lyrics_synced_path.exists() and not overwrite:
+                            logger.debug(
+                                f'Synced lyrics already exists at "{lyrics_synced_path}", skipping'
+                            )
+                        else:
+                            logger.debug(f'Saving synced lyrics to "{lyrics_synced_path}"')
+                            downloader_song.save_lyrics_synced(
+                                lyrics_synced_path, lyrics.synced
+                            )
                 elif media_metadata["type"] in ("music-videos", "library-music-videos"):
                     music_video_id_alt = (
                         downloader_music_video.get_music_video_id_alt(media_metadata)
