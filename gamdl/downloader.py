@@ -428,18 +428,10 @@ class Downloader:
         return "." + file_format.value
 
     def get_final_path(self, tags: dict, file_extension: str) -> Path:
-        template_final = ""
-        return Path(
-            self.output_path,
-            *[
-                self.get_sanitized_string(i.format(**tags), True)
-                for i in template_final[0:-1]
-            ],
-            (
-                self.get_sanitized_string(template_final[-1].format(**tags), False)
-                + file_extension
-            ),
-        )
+        filename = self.get_sanitized_string(
+            filename_template.format(**tags), is_folder=False
+        ) + file_extension
+        return Path(self.output_path / filename)
 
     def get_cover_file_extension(self, cover_url: str) -> str | None:
         cover_bytes = self.get_cover_url_response_bytes(cover_url)
