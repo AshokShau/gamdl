@@ -39,7 +39,7 @@ class Downloader:
         self,
         apple_music_api: AppleMusicApi,
         itunes_api: ItunesApi,
-        output_path: Path = Path("./Apple Music"),
+        output_path: Path = Path("./"),
         temp_path: Path = Path("./temp"),
         wvd_path: Path = None,
         nm3u8dlre_path: str = "N_m3u8DL-RE",
