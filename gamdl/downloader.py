@@ -484,6 +484,7 @@ class Downloader:
         tags: dict,
         cover_url: str,
     ):
+        print(tags)
         to_apply_tags = [
             tag_name
             for tag_name in tags.keys()
