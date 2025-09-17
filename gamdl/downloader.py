@@ -539,8 +539,10 @@ class Downloader:
         file_extension: str,
         playlist_tags: PlaylistTags,
     ) -> Path:
-        filename = self.get_sanitized_string(tags["title"] + " - " + tags["artist"], is_folder=False) + file_extension
-        return Path(self.output_path / filename)
+        logger.debug(tags)
+        raise SystemExit(0)
+        #filename = self.get_sanitized_string(tags["title"] + " - " + tags["artist"], is_folder=False) + file_extension
+        #return Path(self.output_path / filename)
 
     def get_cover_format(self, cover_url: str) -> str | None:
         cover_bytes = self.get_cover_bytes(cover_url)
