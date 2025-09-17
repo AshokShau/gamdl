@@ -656,9 +656,12 @@ class DownloaderSong:
         webplayback = self.downloader.apple_music_api.get_webplayback(
             media_id,
         )
+        lyrics_text = None
+        if lyrics:
+            lyrics_text = lyrics.synced if lyrics.synced else lyrics.unsynced
         tags = self.get_tags(
             webplayback,
-            lyrics.unsynced if lyrics else None,
+            lyrics_text,
         )
         final_path = self.downloader.get_final_path(tags, ".m4a", playlist_tags)
         download_info.tags = tags
