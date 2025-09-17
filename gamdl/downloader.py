@@ -65,7 +65,7 @@ class Downloader:
         self,
         apple_music_api: AppleMusicApi,
         itunes_api: ItunesApi,
-        output_path: Path = Path("./Apple Music"),
+        output_path: Path = Path("./"),
         temp_path: Path = Path("."),
         wvd_path: Path = None,
         overwrite: bool = False,
@@ -539,38 +539,8 @@ class Downloader:
         file_extension: str,
         playlist_tags: PlaylistTags,
     ) -> Path:
-        if tags.album is not None:
-            template_folder = (
-                self.template_folder_compilation.split("/")
-                if tags.compilation
-                else self.template_folder_album.split("/")
-            )
-            template_file = (
-                self.template_file_multi_disc.split("/")
-                if tags.disc_total > 1
-                else self.template_file_single_disc.split("/")
-            )
-        else:
-            template_folder = self.template_folder_no_album.split("/")
-            template_file = self.template_file_no_album.split("/")
-
-        template_final = template_folder + template_file
-
-        tags_dict = tags.__dict__.copy()
-        if playlist_tags:
-            tags_dict.update(playlist_tags.__dict__)
-
-        return Path(
-            self.output_path,
-            *[
-                self.get_sanitized_string(i.format(**tags_dict), True)
-                for i in template_final[0:-1]
-            ],
-            (
-                self.get_sanitized_string(template_final[-1].format(**tags_dict), False)
-                + file_extension
-            ),
-        )
+        filename = self.get_sanitized_string(tags["title"] + " - " + tags["artist"], is_folder=False) + file_extension
+        return Path(self.output_path / filename)
 
     def get_cover_format(self, cover_url: str) -> str | None:
         cover_bytes = self.get_cover_bytes(cover_url)
@@ -783,24 +753,24 @@ class Downloader:
                 download_info.cover_url,
             )
 
-        if (
-            self.no_synced_lyrics
-            or not download_info.lyrics
-            or not download_info.lyrics.synced
-        ):
-            pass
-        elif download_info.synced_lyrics_path.exists() and not self.overwrite:
-            logger.debug(
-                f'[{colored_media_id}] Synced lyrics already exist at "{download_info.synced_lyrics_path}", skipping'
-            )
-        else:
-            logger.debug(
-                f'[{colored_media_id}] Saving synced lyrics to "{download_info.synced_lyrics_path}"'
-            )
-            self.write_synced_lyrics(
-                download_info.synced_lyrics_path,
-                download_info.lyrics.synced,
-            )
+        # if (
+        #     self.no_synced_lyrics
+        #     or not download_info.lyrics
+        #     or not download_info.lyrics.synced
+        # ):
+        #     pass
+        # elif download_info.synced_lyrics_path.exists() and not self.overwrite:
+        #     logger.debug(
+        #         f'[{colored_media_id}] Synced lyrics already exist at "{download_info.synced_lyrics_path}", skipping'
+        #     )
+        # else:
+        #     logger.debug(
+        #         f'[{colored_media_id}] Saving synced lyrics to "{download_info.synced_lyrics_path}"'
+        #     )
+        #     self.write_synced_lyrics(
+        #         download_info.synced_lyrics_path,
+        #         download_info.lyrics.synced,
+        #     )
 
         if download_info.playlist_tags and self.save_playlist:
             playlist_file_path = self.get_playlist_file_path(
