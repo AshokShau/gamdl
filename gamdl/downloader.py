@@ -754,24 +754,24 @@ class Downloader:
                 download_info.cover_url,
             )
 
-        # if (
-        #     self.no_synced_lyrics
-        #     or not download_info.lyrics
-        #     or not download_info.lyrics.synced
-        # ):
-        #     pass
-        # elif download_info.synced_lyrics_path.exists() and not self.overwrite:
-        #     logger.debug(
-        #         f'[{colored_media_id}] Synced lyrics already exist at "{download_info.synced_lyrics_path}", skipping'
-        #     )
-        # else:
-        #     logger.debug(
-        #         f'[{colored_media_id}] Saving synced lyrics to "{download_info.synced_lyrics_path}"'
-        #     )
-        #     self.write_synced_lyrics(
-        #         download_info.synced_lyrics_path,
-        #         download_info.lyrics.synced,
-        #     )
+        if (
+            self.no_synced_lyrics
+            or not download_info.lyrics
+            or not download_info.lyrics.synced
+        ):
+            pass
+        elif download_info.synced_lyrics_path.exists() and not self.overwrite:
+            logger.debug(
+                f'[{colored_media_id}] Synced lyrics already exist at "{download_info.synced_lyrics_path}", skipping'
+            )
+        else:
+            logger.debug(
+                f'[{colored_media_id}] Saving synced lyrics to "{download_info.synced_lyrics_path}"'
+            )
+            self.write_synced_lyrics(
+                download_info.synced_lyrics_path,
+                download_info.lyrics.synced,
+            )
 
         if download_info.playlist_tags and self.save_playlist:
             playlist_file_path = self.get_playlist_file_path(
